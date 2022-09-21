@@ -141,6 +141,8 @@ public class MusicManager {
                     updatedPlaylistSting = updatedPlaylistSting + updatedPlaylist.get(i);
                 }
                 writer.write(updatedPlaylistSting);
+                writer.flush();
+                writer.close();
             }
             catch(Exception e) { //also from Mrs. H
                 System.out.println("Error saving from file: " + e);
