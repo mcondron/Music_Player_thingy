@@ -6,19 +6,17 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class MusicManager {
     ArrayList<String> menu = new ArrayList<String>();
+    String shortMenu;
 
     Scanner sc = new Scanner(System.in);
     MusicLibrary playlist;
 
     public MusicManager() {
         createMenu();
+        printMenu();
         while (true) {
-            printMenu();
             choice();
-            System.out.println();
-            System.out.println("Press enter to open menu.");
-            try{System.in.read();}
-            catch(Exception e){}
+            System.out.println(shortMenu);
         }
     }
 
@@ -33,6 +31,9 @@ public class MusicManager {
             menu.add("6. List all songs by an artist");
             menu.add("7. Save the playlist");
             menu.add("8. Exit the system");
+            menu.add("9. Display this menu");
+
+            shortMenu = "\n\r1:Load 2:List 3:Search-Title 4:Add 5:Remove 6:list-Artist 7:Save 8:Exit 9:Menu";
         }
 
         public void printMenu() {
@@ -63,6 +64,8 @@ public class MusicManager {
                         break;
                 case 8: System.out.println("good bye");
                     System.exit(0);
+                    break;
+                case 9: printMenu();
                     break;
             }
         }
