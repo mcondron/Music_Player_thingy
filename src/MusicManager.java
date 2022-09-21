@@ -15,6 +15,10 @@ public class MusicManager {
         while (true) {
             printMenu();
             choice();
+            System.out.println();
+            System.out.println("Press enter to open menu.");
+            try{System.in.read();}
+            catch(Exception e){}
         }
     }
 
@@ -66,8 +70,8 @@ public class MusicManager {
     public static ArrayList<Music> loadMusicFromFile()
     {
         ArrayList<Music> musicList = new ArrayList<Music>();
-
-        JFileChooser chooser = new JFileChooser(); //a file chooser
+        String currentWorkingDir = System.getProperty("user.dir");
+        JFileChooser chooser = new JFileChooser(currentWorkingDir); //a file chooser
         chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv")); //for csv files
         int returnVal = chooser.showOpenDialog(chooser); //show the dialog to OPEN
         if(returnVal == JFileChooser.APPROVE_OPTION) //if they picked something
@@ -81,11 +85,15 @@ public class MusicManager {
                         musicList.add(music);
                 }
                 sc.close();
+                System.out.println("Music loaded from " + chooser.getSelectedFile() );
             }
             catch(Exception e) {
                 System.out.println("Error loading from file: " + e);
                 e.printStackTrace();
             }
+        }
+        else{
+            System.out.println("User canceled");
         }
         return musicList;
     }
@@ -128,7 +136,8 @@ public class MusicManager {
     }
 
     public void savePlaylistToFile(){//this method doesn't work right, it overwrites the file, but it saves the file blank
-        JFileChooser chooser = new JFileChooser(); //JFileChooser methods are copy and pasted from Mrs. H's code
+        String currentWorkingDir = System.getProperty("user.dir");
+        JFileChooser chooser = new JFileChooser(currentWorkingDir); //a file chooser
         chooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
         int returnVal = chooser.showOpenDialog(chooser);
         if(returnVal == JFileChooser.APPROVE_OPTION)
@@ -143,11 +152,14 @@ public class MusicManager {
                 writer.write(updatedPlaylistSting);
                 writer.flush();
                 writer.close();
+                System.out.println("Music saved to " + chooser.getSelectedFile() );
             }
             catch(Exception e) { //also from Mrs. H
                 System.out.println("Error saving from file: " + e);
                 e.printStackTrace();
             }
+        } else{
+            System.out.println("User canceled");
         }
 
     }
