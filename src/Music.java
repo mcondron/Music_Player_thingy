@@ -156,7 +156,7 @@ public class Music {
 
 
     public String toString(){
-        return title + "," + artistsToString(artists) + "," + album + "," + year + "," + playCount + "," + rating;
+        return title + "," + artists.size() + artistsToString(artists) + "," + album + "," + year + "," + playCount + "," + rating;
     }
 
     public String artistsToString(ArrayList<String> artists){
