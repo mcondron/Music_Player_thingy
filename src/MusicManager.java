@@ -145,11 +145,10 @@ public class MusicManager {
             try {
                 FileWriter writer = new FileWriter(chooser.getSelectedFile()); //FileWriter methods are adapted from Geeks for Geeks
                 ArrayList<String> updatedPlaylist = playlist.returnSongs();
-                String updatedPlaylistSting = new String();
                 for(int i = 0; i < updatedPlaylist.size(); i++) {
-                    updatedPlaylistSting = updatedPlaylistSting + updatedPlaylist.get(i);
+                    writer.write( updatedPlaylist.get(i) + String.format(",1" +
+                            "%n"));
                 }
-                writer.write(updatedPlaylistSting);
                 writer.flush();
                 writer.close();
                 System.out.println("Music saved to " + chooser.getSelectedFile() );
