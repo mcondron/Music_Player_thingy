@@ -10,13 +10,33 @@ public class Music
      * @ported to C# by CCondron
      */
 
-    //instance variables
-    private String title;
-    private int year;
-    private String album;
-    private List<String> artists;
-    private int playCount;
-    private double rating;
+    //instance properties
+    public string Title { get => _title; set => _title = value; } //explict property with inline fucntions
+    private string _title;
+    public int Year { get => _year; set => _year = value; }
+    private int _year;
+    public string Album { get => _album; set => _album = value; }
+    private string _album;
+    public List<string> Artists //explic property with explict getters and setters to protect private instance
+    {
+        get { return new List<string>(_artists); }
+        set
+        {
+            if (_artists == null)
+            {
+                _artists = new List<string>(value);
+            }
+            else
+            {
+                _artists.Clear();
+                _artists.AddRange(value);
+            }
+        }
+    }
+    private List<string> _artists;
+    public int PlayCount { get => _playCount; } //note: play count cannot be set externally, so no set function is defined
+    private int _playCount;
+    public double Rating { get; set; } // example auto property with implict backing field
 
     /**
      * Constructor: full
@@ -30,14 +50,14 @@ public class Music
      * @param rating    The music's rating
      */
 
-    public Music(String title, List<String> artists, String album, int year, int playCount, double rating)
+    public Music(string title, List<string> artists, string album, int year, int playCount, double rating)
     {
-        this.title = title;
-        this.artists = artists;
-        this.album = album;
-        this.year = year;
-        this.playCount = playCount;
-        this.rating = rating;
+        _title = title ?? string.Empty; //null resolution operator
+        _artists = artists ?? new List<string>();
+        _album = album ?? string.Empty;
+        _year = year;
+        _playCount = playCount;
+        Rating = rating;
     }
 
     /**
@@ -49,10 +69,7 @@ public class Music
      * @param album   The album to which the music belongs, provid single if the music was released separately
      * @param artists A list of artists that peform the music
      */
-    public Music(String title, List<String> artists, String album, int year):this(title, artists, album, year, 0, 5.0)
-    {
-        
-    }
+    public Music(string title, List<string> artists, string album, int year) : this(title, artists, album, year, 0, 5.0) { }
 
     /**
      * Creates a new Music object with the given title and year.
@@ -60,127 +77,27 @@ public class Music
      * @param title The title of the music
 
      */
-    public Music(String title, List<String> artists, String album):this(title, artists, album, 0, 0, 5.0)
-    {
-        
-    }
+    public Music(string title, List<string> artists, string album) : this(title, artists, album, 0, 0, 5.0) { }
 
-    /**
-     * Gets the artists in the film.
-     *
-     * @return the artists as a String
-     */
-    public List<String> getArtists()
-    {
-        return artists;
-    }
-
-    /**
-     * Gets the album title
-     *
-     * @return album as a String
-     */
-    public String getAlbum()
-    {
-        return album;
-    }
-
-    /**
-     * Gets the title of the music
-     *
-     * @return the title as a String
-     */
-    public String getTitle()
-    {
-        return title;
-    }
-
-    /**
-     * Gets the year the music was released
-     *
-     * @return the year as an int
-     */
-    public int getYear()
-    {
-        return year;
-    }
-
-    /**
-     * Gets the number of times this music has been played
-     *
-     * @return the playCount as an int
-     */
-    public int getPlayCount()
-    {
-        return playCount;
-    }
-
-    /**
-     * Gets the music's current rating
-     *
-     * @return the rating
-     */
-    public double getRating()
-    {
-        return rating;
-    }
 
     /**
      * "Plays" the music (currently just increments the number of times the music has been played).
      */
     public void play()
     {
-        this.playCount++;
-    }
-
-    /**
-     * Sets the music's rating
-     *
-     * @param rating the rating to set
-     */
-    public void setRating(double rating)
-    {
-        this.rating = rating;
-    }
-
-    public void setTitle(String newTitle)
-    {
-        this.title = newTitle;
-    }
-
-    public void setArtists(String newArtists)
-    {
-        //for(int i = 0; i < artists.size(); i++){
-        //    artists.remove(i);
-        //}
-        artists.Clear();
-        artists.Add(newArtists);
-    }
-
-    public void setAlbum(String newAlbum)
-    {
-        this.album = newAlbum;
-    }
-
-    public void setYear(int newYear)
-    {
-        this.year = newYear;
-    }
-
-    public void setPlayCount(int newCount)
-    {
-        this.playCount = newCount;
+        _playCount++;
     }
 
 
-    public String toString()
+
+    public override string ToString()
     {
-        return title + "," + artists.Count() + artistsToString(artists) + "," + album + "," + year + "," + playCount + "," + rating;
+        return _title + "," + _artists.Count() + artistsToString(_artists) + "," + _album + "," + _year + "," + _playCount + "," + Rating;
     }
 
-    public String artistsToString(List<String> artists)
+    public string artistsToString(List<string> artists)
     {
-        String artistsString = "";
+        string artistsString = "";
         for (int i = 0; i < artists.Count(); i++)
         {
             artistsString = artistsString + "," + artistsString[i];
@@ -188,34 +105,38 @@ public class Music
         return artistsString;
     }
 
-    private static String DELIM = ","; //for file writing
+    private static string DELIM = ","; //for file writing
 
-    public static Music parseFileString(String input)
+
+
+    public static bool TryParseFileString(string input, out Music? music)
     {
-        Music newMusic = null;
         var fields = input.Split(DELIM);
         try
         { //in case we fail to parse anything, such as format didn't work
             var artists = new List<string>();
             var fieldPosition = 0;
-            String title = fields[fieldPosition++]; // post increment [var]++ will take the current value then increment the var
+            string title = fields[fieldPosition++]; // post increment [var]++ will take the current value then increment the var
             int numArtists = int.Parse(fields[fieldPosition++]);
             for (int i = 0; i < numArtists; i++)
             {
                 artists.Add(fields[fieldPosition++]);
             }
-            String album = fields[fieldPosition++];
+            string album = fields[fieldPosition++];
             int year = int.Parse(fields[fieldPosition++]); //year is an int
             int playCount = int.Parse(fields[fieldPosition++]);
             double rating = double.Parse(fields[fieldPosition++]);
 
-            newMusic = new Music(title, artists, album, year, playCount, rating);
+            music = new Music(title, artists, album, year, playCount, rating);
+            return true;
         }
         catch (Exception e)
         {
             Console.WriteLine($"Failed to parse music: {input} error: {e.Message}"); // c # string interpolation 
+            music = null;
+            return false;
         }
-        return newMusic;
+
     }
 
 }
