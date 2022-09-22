@@ -1,5 +1,3 @@
-
-
 public class Music
 {
     /**
@@ -107,7 +105,7 @@ public class Music
 
     private static string DELIM = ","; //for file writing
 
-
+     
 
     public static bool TryParseFileString(string input, out Music? music)
     {
