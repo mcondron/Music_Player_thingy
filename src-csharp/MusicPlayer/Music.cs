@@ -1,19 +1,20 @@
-import java.util.ArrayList;
-import java.util.Scanner;
 
-public class Music {
+
+public class Music
+{
     /**
      * A class to represent a music file in a collection.
      *
      * @author Elisa Heinricher
      * @version Fall2022
+     * @ported to C# by CCondron
      */
 
     //instance variables
     private String title;
     private int year;
     private String album;
-    private ArrayList<String> artists;
+    private List<String> artists;
     private int playCount;
     private double rating;
 
@@ -29,7 +30,8 @@ public class Music {
      * @param rating    The music's rating
      */
 
-    public Music(String title, ArrayList<String> artists, String album, int year, int playCount, double rating) {
+    public Music(String title, List<String> artists, String album, int year, int playCount, double rating)
+    {
         this.title = title;
         this.artists = artists;
         this.album = album;
@@ -47,8 +49,9 @@ public class Music {
      * @param album   The album to which the music belongs, provid single if the music was released separately
      * @param artists A list of artists that peform the music
      */
-    public Music(String title, ArrayList<String> artists, String album, int year) {
-        this(title, artists, album, year, 0, 5.0);
+    public Music(String title, List<String> artists, String album, int year):this(title, artists, album, year, 0, 5.0)
+    {
+        
     }
 
     /**
@@ -57,8 +60,9 @@ public class Music {
      * @param title The title of the music
 
      */
-    public Music(String title, ArrayList<String> artists, String album) {
-        this(title, artists, album, 0, 0, 5.0);
+    public Music(String title, List<String> artists, String album):this(title, artists, album, 0, 0, 5.0)
+    {
+        
     }
 
     /**
@@ -66,7 +70,8 @@ public class Music {
      *
      * @return the artists as a String
      */
-    public ArrayList<String> getArtists() {
+    public List<String> getArtists()
+    {
         return artists;
     }
 
@@ -75,7 +80,8 @@ public class Music {
      *
      * @return album as a String
      */
-    public String getAlbum() {
+    public String getAlbum()
+    {
         return album;
     }
 
@@ -84,7 +90,8 @@ public class Music {
      *
      * @return the title as a String
      */
-    public String getTitle() {
+    public String getTitle()
+    {
         return title;
     }
 
@@ -93,7 +100,8 @@ public class Music {
      *
      * @return the year as an int
      */
-    public int getYear() {
+    public int getYear()
+    {
         return year;
     }
 
@@ -102,7 +110,8 @@ public class Music {
      *
      * @return the playCount as an int
      */
-    public int getPlayCount() {
+    public int getPlayCount()
+    {
         return playCount;
     }
 
@@ -111,14 +120,16 @@ public class Music {
      *
      * @return the rating
      */
-    public double getRating() {
+    public double getRating()
+    {
         return rating;
     }
 
     /**
      * "Plays" the music (currently just increments the number of times the music has been played).
      */
-    public void play() {
+    public void play()
+    {
         this.playCount++;
     }
 
@@ -127,72 +138,83 @@ public class Music {
      *
      * @param rating the rating to set
      */
-    public void setRating(double rating) {
+    public void setRating(double rating)
+    {
         this.rating = rating;
     }
 
-    public void setTitle(String newTitle) {
+    public void setTitle(String newTitle)
+    {
         this.title = newTitle;
     }
 
-    public void setArtists(String newArtists){
-        for(int i = 0; i < artists.size(); i++){
-            artists.remove(i);
-        }
-        artists.add(newArtists);
+    public void setArtists(String newArtists)
+    {
+        //for(int i = 0; i < artists.size(); i++){
+        //    artists.remove(i);
+        //}
+        artists.Clear();
+        artists.Add(newArtists);
     }
 
-    public void setAlbum(String newAlbum){
+    public void setAlbum(String newAlbum)
+    {
         this.album = newAlbum;
     }
 
-    public void setYear(int newYear){
+    public void setYear(int newYear)
+    {
         this.year = newYear;
     }
 
-    public void setPlayCount(int newCount){
+    public void setPlayCount(int newCount)
+    {
         this.playCount = newCount;
     }
 
 
-    public String toString(){
-        return title + "," + artists.size() + artistsToString(artists) + "," + album + "," + year + "," + playCount + "," + rating;
+    public String toString()
+    {
+        return title + "," + artists.Count() + artistsToString(artists) + "," + album + "," + year + "," + playCount + "," + rating;
     }
 
-    public String artistsToString(ArrayList<String> artists){
-        String artistsString = new String();
-        for(int i = 0; i < artists.size(); i++){
-            artistsString = artistsString + "," + artists.get(i);
+    public String artistsToString(List<String> artists)
+    {
+        String artistsString = "";
+        for (int i = 0; i < artists.Count(); i++)
+        {
+            artistsString = artistsString + "," + artistsString[i];
         }
         return artistsString;
     }
 
-    private static final String DELIM = ","; //for file writing
+    private static String DELIM = ","; //for file writing
 
     public static Music parseFileString(String input)
     {
-        Music newMusic = null; //start as null
-
-        Scanner sc = new Scanner(input);
-        sc.useDelimiter(DELIM);
-        try{ //in case we fail to parse anything, such as format didn't work
-            String title = sc.next();
-            int numArtists = sc.nextInt();
-            ArrayList<String> artists = new ArrayList<>();
-            for(int i = 0; i < numArtists; i++){
-            artists.add(sc.next());}
-            String album = sc.next();
-            int year = sc.nextInt(); //year is an int
-            int playCount = sc.nextInt();
-            double rating = sc.nextDouble();
+        Music newMusic = null;
+        var fields = input.Split(DELIM);
+        try
+        { //in case we fail to parse anything, such as format didn't work
+            var artists = new List<string>();
+            var fieldPosition = 0;
+            String title = fields[fieldPosition++]; // post increment [var]++ will take the current value then increment the var
+            int numArtists = int.Parse(fields[fieldPosition++]);
+            for (int i = 0; i < numArtists; i++)
+            {
+                artists.Add(fields[fieldPosition++]);
+            }
+            String album = fields[fieldPosition++];
+            int year = int.Parse(fields[fieldPosition++]); //year is an int
+            int playCount = int.Parse(fields[fieldPosition++]);
+            double rating = double.Parse(fields[fieldPosition++]);
 
             newMusic = new Music(title, artists, album, year, playCount, rating);
         }
-        catch(Exception e){
-            System.out.println("Failed to parse music: " + input);
+        catch (Exception e)
+        {
+            Console.WriteLine($"Failed to parse music: {input} error: {e.Message}"); // c # string interpolation 
         }
-        sc.close();
-
         return newMusic;
     }
 
